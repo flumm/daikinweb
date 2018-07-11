@@ -50,6 +50,11 @@ func main() {
 	log.Fatal(http.ListenAndServe(listenAddress, router))
 }
 
+type APIResult struct {
+	Data interface{} `json:"data"`
+	Err  interface{} `json:"err,omitempty"`
+}
+
 func getUnits(w http.ResponseWriter, r *http.Request) {
 
 	var data = make([]map[string]string, 0)
@@ -82,8 +87,9 @@ func getUnits(w http.ResponseWriter, r *http.Request) {
 		data = append(data, info)
 	}
 
+	result := APIResult{data, nil}
 	if len(errs) > 0 {
-		log.Println(errs)
+		result.Err = errs
 	}
 
 	_ = json.NewEncoder(w).Encode(data)
@@ -95,21 +101,22 @@ func controllAllUnits(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 	params := r.PostForm
-	var result = make(map[string]map[string]string, 0)
+	var data = make(map[string]map[string]string, 0)
 	var errs = make([]error, 0)
 	for name, ip := range conf.Units {
 		unit := daikingo.NewUnit(ip)
-		data, err := unit.SetControlInfo(params)
+		info, err := unit.SetControlInfo(params)
 
-		result[name] = data
+		data[name] = info
 		if err != nil {
 			errs = append(errs, err)
 			return
 		}
 	}
 
+	result := APIResult{data, nil}
 	if len(errs) > 0 {
-		log.Println(errs)
+		result.Err = errs
 	}
 
 	_ = json.NewEncoder(w).Encode(result)
