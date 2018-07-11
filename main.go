@@ -58,33 +58,40 @@ type APIResult struct {
 func getUnits(w http.ResponseWriter, r *http.Request) {
 
 	var data = make([]map[string]string, 0)
-	var errs = make([]error, 0)
+	var errs = make([]string, 0)
 	for name, ip := range conf.Units {
 		unit := daikingo.NewUnit(ip)
+		unitData := make(map[string]string, 0)
 
 		info, err := unit.GetBasicInfo()
 		if err != nil {
-			errs = append(errs, err)
+			errs = append(errs, err.Error())
+		} else {
+			for k, v := range info {
+				unitData[k] = v
+			}
 		}
 
 		sensor, err := unit.GetSensorInfo()
 		if err != nil {
-			errs = append(errs, err)
+			errs = append(errs, err.Error())
+		} else {
+			for k, v := range sensor {
+				unitData[k] = v
+			}
 		}
 
 		control, err := unit.GetControlInfo()
 		if err != nil {
-			errs = append(errs, err)
+			errs = append(errs, err.Error())
+		} else {
+			for k, v := range control {
+				unitData[k] = v
+			}
 		}
 
-		for k, v := range sensor {
-			info[k] = v
-		}
-		for k, v := range control {
-			info[k] = v
-		}
-		info["conf_name"] = name
-		data = append(data, info)
+		info["name"] = name
+		data = append(data, unitData)
 	}
 
 	result := APIResult{data, nil}
