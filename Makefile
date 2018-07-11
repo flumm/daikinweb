@@ -1,8 +1,9 @@
-
+SOURCES=config.go \
+	main.go
 
 all: daikinweb
 
-daikinweb: main.go config.go
+daikinweb: ${SOURCES}
 	go get
 	go build
 
