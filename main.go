@@ -99,7 +99,11 @@ func getUnits(w http.ResponseWriter, r *http.Request) {
 		result.Err = errs
 	}
 
-	_ = json.NewEncoder(w).Encode(data)
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(result)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func controllAllUnits(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +130,11 @@ func controllAllUnits(w http.ResponseWriter, r *http.Request) {
 		result.Err = errs
 	}
 
-	_ = json.NewEncoder(w).Encode(result)
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(result)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func getUnit(w http.ResponseWriter, r *http.Request) {
@@ -145,7 +153,11 @@ func getUnit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(data)
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func getUnitInfo(w http.ResponseWriter, r *http.Request) {
@@ -178,7 +190,11 @@ func getUnitInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(data)
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func setUnitControl(w http.ResponseWriter, r *http.Request) {
@@ -200,5 +216,9 @@ func setUnitControl(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(data)
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println(err)
+	}
 }
