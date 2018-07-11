@@ -212,7 +212,7 @@ func setUnitControl(w http.ResponseWriter, r *http.Request) {
 	data, err := unit.SetControlInfo(r.PostForm)
 
 	if err != nil {
-		http.Error(w, "Error getting Info: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Error setting control: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
