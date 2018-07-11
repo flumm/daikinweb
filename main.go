@@ -28,8 +28,10 @@ import (
 	"net/http"
 )
 
+const configDir = "/etc/daikinweb/"
+const configFile = configDir + "config.json"
+
 var conf *Config
-var configFile = "/etc/daikinweb/config.json"
 
 func main() {
 	conf = LoadConfig(configFile)
