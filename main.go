@@ -48,7 +48,7 @@ func main() {
 	router.HandleFunc("/units", getUnits).Methods("GET")
 	router.HandleFunc("/units", controllAllUnits).Methods("PUT")
 	router.HandleFunc("/units/{unit}", getUnit).Methods("GET")
-	router.HandleFunc("/units/{unit}/control", setUnitControl).Methods("POST")
+	router.HandleFunc("/units/{unit}/control", setUnitControl).Methods("PUT")
 	router.HandleFunc("/units/{unit}/{infoType}", getUnitInfo).Methods("GET")
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir(conf.WebDir)))
 	log.Println("set up router")
