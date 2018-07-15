@@ -95,7 +95,7 @@ func getUnits(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		info["name"] = name
+		unitData["name"] = name
 		data = append(data, unitData)
 	}
 
