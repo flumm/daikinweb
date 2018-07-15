@@ -32,9 +32,15 @@ const configDir = "/etc/daikinweb/"
 const configFile = configDir + "config.json"
 
 var conf *Config
+var units map[string]*daikingo.Unit = make(map[string]*daikingo.Unit, 0)
 
 func main() {
 	conf = LoadConfig(configFile)
+	// init units
+	for k, v := range conf.Units {
+		unit := daikingo.NewUnit(v)
+		units[k] = unit
+	}
 	listenAddress := ":" + fmt.Sprintf("%v", conf.Port)
 	log.Println("loaded config")
 	log.Println("setting up router")
@@ -59,9 +65,8 @@ func getUnits(w http.ResponseWriter, r *http.Request) {
 
 	var data = make([]map[string]string, 0)
 	var errs = make([]string, 0)
-	for name, ip := range conf.Units {
-		unit := daikingo.NewUnit(ip)
-		unitData := make(map[string]string, 0)
+	for name, unit := range units {
+		unitData := make(map[string]string)
 
 		info, err := unit.GetBasicInfo()
 		if err != nil {
@@ -112,11 +117,10 @@ func controllAllUnits(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 	params := r.PostForm
-	var data = make(map[string]map[string]string, 0)
+	var data = make(map[string]map[string]string)
 	var errs = make([]error, 0)
-	for name, ip := range conf.Units {
-		unit := daikingo.NewUnit(ip)
-		info, err := unit.SetControlInfo(params)
+	for name, unit := range units {
+		info, err := unit.SetControlInfo(params, true)
 
 		data[name] = info
 		if err != nil {
@@ -138,13 +142,11 @@ func controllAllUnits(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUnit(w http.ResponseWriter, r *http.Request) {
-	unitIP, ok := conf.Units[mux.Vars(r)["unit"]]
+	unit, ok := units[mux.Vars(r)["unit"]]
 	if !ok {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
-
-	unit := daikingo.NewUnit(unitIP)
 
 	data, err := unit.GetBasicInfo()
 
@@ -161,7 +163,7 @@ func getUnit(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUnitInfo(w http.ResponseWriter, r *http.Request) {
-	unitIP, ok := conf.Units[mux.Vars(r)["unit"]]
+	unit, ok := units[mux.Vars(r)["unit"]]
 	if !ok {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
@@ -169,7 +171,6 @@ func getUnitInfo(w http.ResponseWriter, r *http.Request) {
 
 	var data map[string]string
 	var err error
-	unit := daikingo.NewUnit(unitIP)
 
 	switch mux.Vars(r)["infoType"] {
 	case "basic":
@@ -198,13 +199,12 @@ func getUnitInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func setUnitControl(w http.ResponseWriter, r *http.Request) {
-	unitIP, ok := conf.Units[mux.Vars(r)["unit"]]
+	unit, ok := units[mux.Vars(r)["unit"]]
 	if !ok {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
 
-	unit := daikingo.NewUnit(unitIP)
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
