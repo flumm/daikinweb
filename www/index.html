@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#2196f3">
+	<title>Daikin Web</title>
+	<link rel="stylesheet" href="/css/framework7.min.css">
+	<link rel="stylesheet" href="/css/framework7-icons.css">
+	<link rel="stylesheet" href="/css/daikinweb.css">
+	<link rel="manifest" crossOrigin="use-credentials" href="/manifest.json">
+    </head>
+    <body>
+	<div id="app">
+	    <div class="statusbar"></div>
+
+	    <div class="panel panel-left panel-cover">
+		<div class="view">
+		    <div class="page">
+			<div class="page-content">
+			    <div class="block-title">Navigation</div>
+			    <div class="list links-list no-chevron no-hairlines-between">
+				<ul>
+				    <li class="selected"><a href="/">
+					<div class="item-media">
+					    <i class="icon f7-icons ios-only">home</i>
+					    <i class="icon material-icons md-only">home</i>
+					</div>
+					<div class="item-inner">
+					    Home
+					</div>
+				    </a></li>
+				    <li><a href="/about/">
+					<div class="item-media">
+					    <i class="icon f7-icons ios-only">info</i>
+					    <i class="icon material-icons md-only">info</i>
+					</div>
+					<div class="item-inner">
+					    About
+					</div>
+				    </a></li>
+				</ul>
+			    </div>
+			    <div class="block"></div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	    <div class="view view-main">
+		<div data-name="home" class="page">
+
+		    <div class="navbar">
+			<div class="navbar-inner">
+			    <div class="left">
+				<a href="#" class="link icon-only panel-open" data-panel="left">
+				    <i class="icon f7-icons ios-only">menu</i>
+				    <i class="icon material-icons md-only">menu</i>
+				</a>
+			    </div>
+			    <div class="title">Daikin Web</div>
+			</div>
+		    </div>
+
+		    <div id="mainpage" class="page-content ptr-content">
+			<div class="ptr-preloader">
+			    <div class="preloader"></div>
+			    <div class="ptr-arrow"></div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+
+	<script id="control-template" type="text/template7">
+	    <div name="allunits" class="card">
+		<div class="card-header">
+		    <span name="title">All Units</span>
+		    <label class="toggle">
+			<input type="checkbox" {{togglestate}}>
+			<span class="toggle-icon"></span>
+		    </label>
+		</div>
+		<div class="card-content card-content-padding">
+		    <div class="list no-hairlines-between">
+		    <ul>
+			<li class="list-group-title thinner">Temperature <span id="otemp">(Outside: {{otemp}}°)</span></li>
+			<li class="item-content">
+			    <div class="item-inner">
+				<div class="item-title">Target: <span id="stemp"></span></div>
+				<div class="item-after">
+				    <div class="stepper stepper-fill stepper-raised stepper-big">
+					<div class="stepper-button-minus"></div>
+					<div class="stepper-input-wrap">
+					    <input type="text" value="{{stemp}}" min="18" max="31" step="1">
+					</div>
+					<div class="stepper-button-plus"></div>
+				    </div>
+				</div>
+			    </div>
+			</li>
+			<li class="list-group-title thinner">Mode</li>
+			<li class="item-content">
+			    <div class="item-inner">
+				<div name="mode" class="segmented segmented-raised full-width">
+				    <button name="0" class="button"><i class="icon material-icons">brightness_auto</i></button>
+				    <button name="3" class="button"><i class="icon material-icons">ac_unit</i></button>
+				    <button name="4" class="button"><i class="icon material-icons">wb_sunny</i></button>
+				    <button name="6" class="button"><i class="icon material-icons">toys</i></button>
+				    <button name="2" class="button"><i class="icon material-icons">opacity</i></button>
+				</div>
+			    </div>
+			</li>
+			<li class="list-group-title thinner">Fan Direction</li>
+			<li class="item-content">
+			    <div class="item-inner">
+				<div name="f_dir" class="segmented segmented-raised full-width">
+				    <button name="0" class="button"><i class="icon material-icons">highlight_off</i></button>
+				    <button name="1" class="button"><i class="icon material-icons">swap_vert</i></button>
+				    <button name="2" class="button"><i class="icon material-icons">swap_horiz</i></button>
+				    <button name="3" class="button"><i class="icon material-icons">3d_rotation</i></button>
+				</div>
+			    </div>
+			</li>
+			<li class="list-group-title thinner">Fan Rate</li>
+			<li class="item-content">
+			    <div class="item-inner center">
+				<div name="f_rate" class="segmented segmented-raised full-width">
+				    <button name="A" class="button"><i class="icon material-icons">brightness_auto</i></button>
+				    <button name="B" class="button" ><i class="icon material-icons">volume_off</i></button>
+				    <button name="3" class="button">1</button>
+				    <button name="4" class="button">2</button>
+				    <button name="5" class="button">3</button>
+				    <button name="6" class="button">4</button>
+				    <button name="7" class="button">5</button>
+				</div>
+			    </div>
+			</li>
+		    </ul>
+		    </div>
+		</div>
+	    </div>
+	</script>
+
+	<script id="unit-template" type="text/template7">
+	    <div class="card" name="card-{{name}}">
+		<div class="card-header">
+		    <i name="icon" class="icon icon-light-color material-icons">{{mode_icon}}</i>
+		    <span name="title">{{title}}</span>
+		    <label name="pow" class="toggle">
+			<input type="checkbox" {{togglestate}}>
+			<span class="toggle-icon"></span>
+		    </label>
+		</div>
+		<div class="card-content card-content-padding">
+		<div class="list links-list">
+		    <ul>
+			<li>
+			    <a href="/units/{{name}}/" class="smaller-text">
+				<span class="hide-small">
+				    Temperature 
+				</span>
+				<span class="stemp"><img src="/images/thermometer.svg" height="24px">
+				    <span name="stemp">{{stemp}}</span>
+				</span>
+				|
+				<span class="hide-small">
+				    Fan Direction 
+				</span>
+				<i name="f_dir" class="icon material-icons">{{dir_icon}}</i>
+				|
+				<span class="hide-small">
+				    Fan Rate 
+				</span>
+				<i name="f_rate" class="icon material-icons">{{rate_icon}}</i>
+			    </a>
+			</li>
+		    </ul>
+		</div>
+		</div>
+	    </div>
+	</script>
+	<script type="text/javascript" src="/js/framework7.min.js"></script>
+	<script type="text/javascript" src="/js/app.js"></script>
+    </body>
+</html>
