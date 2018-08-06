@@ -109,6 +109,9 @@ var DaikinWeb = {
 	DaikinWeb.units[data.name] = el;
     },
     updateControl: (data, pageEl) => {
+	// setup data
+	data.togglestate = (data.pow == 1) ? 'checked' : '';
+
 	let oldEl = DaikinWeb.controlCard;
 	let el = Dom7(DaikinWeb.controlTemplate(data));
 	el.data('control', data);
